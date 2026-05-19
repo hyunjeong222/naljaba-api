@@ -6,6 +6,10 @@ import com.spring.naljaba_api.dto.request.SaveDatesRequest;
 import com.spring.naljaba_api.dto.response.AvailableDateResponse;
 import com.spring.naljaba_api.dto.response.ConfirmDateResponse;
 import com.spring.naljaba_api.dto.response.DateResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Date", description = "날짜 관련 API")
 @RestController
 @RequestMapping("/api/dates")
 @RequiredArgsConstructor
@@ -21,7 +26,11 @@ public class AvailableDateController {
 
     private final AvailableDateService availableDateService;
 
-    // 날짜 선택 및 수정
+    @Operation(summary = "날짜 선택 및 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "저장 성공"),
+            @ApiResponse(responseCode = "404", description = "멤버 없음")
+    })
     @PostMapping("/{memberId}")
     public ResponseEntity<List<AvailableDateResponse>> saveDates(
             @PathVariable UUID memberId,
@@ -29,20 +38,33 @@ public class AvailableDateController {
         return ResponseEntity.ok(availableDateService.saveDates(memberId, request));
     }
 
-    // 선택 날짜 조회
+    @Operation(summary = "선택 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "404", description = "멤버 없음 / 선택한 날짜 없음")
+    })
     @GetMapping("/{memberId}")
     public ResponseEntity<List<AvailableDateResponse>> getDates(
             @PathVariable UUID memberId) {
         return ResponseEntity.ok(availableDateService.getDates(memberId));
     }
 
-    // 날짜별 집계 결과 조회
+    @Operation(summary = "날짜별 집계 결과 조회", description = "전원이 날짜를 선택한 경우에만 조회 가능")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "400", description = "전원 미선택")
+    })
     @GetMapping("/results")
     public ResponseEntity<List<DateResultResponse>> getDateResults() {
         return ResponseEntity.ok(availableDateService.getDateResults());
     }
 
-    // 날짜 확정 (방장만 가능)
+    @Operation(summary = "날짜 확정", description = "방장만 가능")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "확정 성공"),
+            @ApiResponse(responseCode = "403", description = "방장 아님"),
+            @ApiResponse(responseCode = "400", description = "이미 확정됨 / 전원 미선택")
+    })
     @PostMapping("/confirm/{memberId}")
     public ResponseEntity<ConfirmDateResponse> confirmDate(
             @PathVariable UUID memberId,
@@ -50,7 +72,12 @@ public class AvailableDateController {
         return ResponseEntity.ok(availableDateService.confirmDate(memberId, request));
     }
 
-    // 확정 날짜 변경
+    @Operation(summary = "확정 날짜 변경", description = "방장만 가능")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "변경 성공"),
+            @ApiResponse(responseCode = "403", description = "방장 아님"),
+            @ApiResponse(responseCode = "400", description = "확정 날짜 없음 / 같은 날짜")
+    })
     @PutMapping("/confirm/{memberId}")
     public ResponseEntity<ConfirmDateResponse> updateConfirmedDate(
             @PathVariable UUID memberId,
@@ -58,7 +85,11 @@ public class AvailableDateController {
         return ResponseEntity.ok(availableDateService.updateConfirmedDate(memberId, request));
     }
 
-    // 확정 날짜 조회
+    @Operation(summary = "확정 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "400", description = "아직 확정 안 됨")
+    })
     @GetMapping("/confirmed")
     public ResponseEntity<ConfirmDateResponse> getConfirmedDate() {
         return ResponseEntity.ok(availableDateService.getConfirmedDate());
