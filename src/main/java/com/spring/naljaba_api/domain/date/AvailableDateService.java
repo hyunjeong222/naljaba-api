@@ -82,33 +82,40 @@ public class AvailableDateService {
         // 전원이 날짜를 선택했는지 확인
         long selectedMemberCount = availableDateRepository.countDistinctMember();
         if (totalMemberCount != selectedMemberCount) {
-            throw new CustomException(ErrorCode.NOT_ALL_MEMBERS_SELECTED);
+            throw new CustomException(ErrorCode.NO_COMMON_DATES);
         }
 
-        // 날짜별 멤버 이름 그룹핑
+        // 전원 가능한 날짜 목록
+        List<LocalDate> commonDates = getCommonDates(totalMemberCount);
+
+        if (commonDates.isEmpty()) {
+            throw new CustomException(ErrorCode.NO_COMMON_DATES);
+        }
+
         List<Object[]> results = availableDateRepository.findDatesWithMemberNames();
 
-        Map<LocalDate, List<String>> dateMap = new LinkedHashMap<>();
+        // 날짜별 선택 멤버 수 카운트
+        Map<LocalDate, Long> dateCountMap = new LinkedHashMap<>();
         for (Object[] row : results) {
             LocalDate date = (LocalDate) row[0];
-            String name = (String) row[1];
-            // 날짜가 없으면 새 리스트 생성 후 이름 추가
-            dateMap.computeIfAbsent(date, k -> new ArrayList<>()).add(name);
+            dateCountMap.merge(date, 1L, Long::sum);
         }
 
-        return dateMap.entrySet().stream()
-                .map(entry -> new DateResultResponse(
-                        entry.getKey(),
-                        (long) entry.getValue().size(),
-                        entry.getValue()
-                ))
+        // 전원 가능한 날짜만 필터링 후 반환
+        return dateCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == totalMemberCount)
+                .map(entry -> new DateResultResponse(entry.getKey()))
                 .sorted(Comparator.comparing(DateResultResponse::date))
                 .toList();
     }
 
-    // 날짜 확정 (방장만 가능)
+    /**
+     * 날짜 확정 및 변경 통합 (방장만 가능)
+     * 확정 전 → 날짜 확정
+     * 확정 후 → 날짜 변경
+     */
     @Transactional
-    public ConfirmDateResponse confirmDate(UUID memberId, ConfirmDateRequest request) {
+    public ConfirmDateResponse confirmOrUpdateDate(UUID memberId, ConfirmDateRequest request) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -118,73 +125,51 @@ public class AvailableDateService {
             throw new CustomException(ErrorCode.NOT_HOST);
         }
 
-        // 이미 확정된 경우
-        if (member.isConfirmed()) {
-            throw new CustomException(ErrorCode.ALREADY_CONFIRMED);
-        }
-
-        // 모든 멤버가 날짜를 선택했는지 확인
+        // 전원 날짜 선택 확인
         long totalMemberCount = memberRepository.count();
         long selectedMemberCount = availableDateRepository.countDistinctMember();
-
         if (totalMemberCount != selectedMemberCount) {
             throw new CustomException(ErrorCode.NOT_ALL_MEMBERS_SELECTED);
         }
 
-        // 집계된 날짜 중 하나인지 확인 (아무도 선택 안 한 날짜 확정 방지)
-        List<LocalDate> allDates = availableDateRepository.findDatesWithMemberNames()
-                .stream()
-                .map(row -> (LocalDate) row[0])
-                .distinct()
-                .toList();
+        // 전원 가능한 날짜 목록 조회
+        List<LocalDate> commonDates = getCommonDates(totalMemberCount);
+        if (commonDates.isEmpty()) {
+            throw new CustomException(ErrorCode.NO_COMMON_DATES);
+        }
 
-        if (!allDates.contains(request.date())) {
+        // 선택한 날짜가 공통 날짜 중에 있는지 확인
+        if (!commonDates.contains(request.date())) {
             throw new CustomException(ErrorCode.DATE_NOT_AVAILABLE);
         }
 
-        member.confirmDate(request.date());
-        memberRepository.save(member);
-
-        return new ConfirmDateResponse(request.date(), "날짜가 확정되었습니다");
-    }
-
-    // 확정 날짜 변경 (방장만 가능)
-    @Transactional
-    public ConfirmDateResponse updateConfirmedDate(UUID memberId, ConfirmDateRequest request) {
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        // 방장 확인
-        if (!member.isHost()) {
-            throw new CustomException(ErrorCode.NOT_HOST);
-        }
-
-        // 확정된 날짜가 없는 경우
-        if (!member.isConfirmed()) {
-            throw new CustomException(ErrorCode.NOT_CONFIRMED_YET);
-        }
-
-        // 같은 날짜로 변경 시도
-        if (member.getConfirmedDate().equals(request.date())) {
+        // 이미 확정된 날짜와 같은 날짜인지 확인
+        if (member.isConfirmed() && member.getConfirmedDate().equals(request.date())) {
             throw new CustomException(ErrorCode.SAME_DATE_CONFIRMED);
         }
 
-        // 집계된 날짜 중 하나인지 확인
-        List<LocalDate> allDates = availableDateRepository.findDatesWithMemberNames()
-                .stream()
-                .map(row -> (LocalDate) row[0])
-                .distinct()
-                .toList();
-
-        if (!allDates.contains(request.date())) {
-            throw new CustomException(ErrorCode.DATE_NOT_AVAILABLE);
-        }
-
         member.confirmDate(request.date());
         memberRepository.save(member);
 
-        return new ConfirmDateResponse(request.date(), "날짜가 변경되었습니다");
+        // 확정 전이었으면 "확정", 이미 확정됐었으면 "변경"
+        String message = member.isConfirmed() ? "날짜가 변경되었습니다" : "날짜가 확정되었습니다";
+        return new ConfirmDateResponse(request.date(), message);
+    }
+
+    // 전원이 선택한 공통 날짜 목록 추출
+    private List<LocalDate> getCommonDates(long totalMemberCount) {
+        List<Object[]> results = availableDateRepository.findDatesWithMemberNames();
+
+        Map<LocalDate, Long> dateCountMap = new LinkedHashMap<>();
+        for (Object[] row : results) {
+            LocalDate date = (LocalDate) row[0];
+            dateCountMap.merge(date, 1L, Long::sum);
+        }
+
+        return dateCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == totalMemberCount)
+                .map(Map.Entry::getKey)
+                .toList();
     }
 
     // 확정된 날짜 조회
