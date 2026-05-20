@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
    DUPLICATE_DATE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "중복된 날짜가 있습니다."),
    NOT_ALL_MEMBERS_SELECTED(HttpStatus.BAD_REQUEST, "아직 날짜를 선택하지 않은 멤버가 있습니다."),
    ONLY_ONE_DATE_ALLOWED(HttpStatus.BAD_REQUEST, "날짜는 하나만 선택해주세요"),
-   NO_COMMON_DATES(HttpStatus.BAD_REQUEST, "공통으로 가능한 날짜가 없습니다."),
+   NO_COMMON_DATES(HttpStatus.BAD_REQUEST, "아직 모두가 가능한 날짜가 없어요"),
    NOT_CONFIRMED_YET(HttpStatus.BAD_REQUEST, "아직 날짜가 확정되지 않았습니다.");
 
    private final HttpStatus status;
