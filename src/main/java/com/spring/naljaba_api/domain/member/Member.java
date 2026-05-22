@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Entity
@@ -18,15 +17,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
-    // 색상 팔레트
-    private static final String[] COLOR_PALETTE = {
-            "#f4a7bb", // 핑크
-            "#f6c7ad", // 주황
-            "#e5d5f0", // 보라
-            "#d5dcfc", // 파랑
-            "#aadcdc", // 민트
-    };
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
@@ -58,10 +48,10 @@ public class Member {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static Member create(String name, boolean isHost) {
+    public static Member create(String name, String profileColor, boolean isHost) {
         Member member = new Member();
         member.name = name;
-        member.profileColor = COLOR_PALETTE[new Random().nextInt(COLOR_PALETTE.length)];
+        member.profileColor = profileColor;
         member.isHost = isHost;
         return member;
     }
