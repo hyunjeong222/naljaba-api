@@ -1,0 +1,74 @@
+/* ── 메인 콘텐츠 영역 ── */
+.main-content {
+    min-height: 68vh;
+    padding: 37px 28px 74px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #F4F3F9;
+}
+
+/* ── 섹션 라벨 ── */
+.section-label {
+    font-size: 21px;
+    font-weight: 500;
+    color: #4C60C3;
+    background: none;
+    margin-bottom: 27px;
+}
+
+.profile-color-preview {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #65759F;
+}
+
+.profile-input-container {
+    background: none;
+    margin: 17px 0px 28px;
+}
+
+.profile-create-input {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #A4A4A4;
+    border-radius: 8px;
+    padding: 0px 22px;
+    font-size: 13px;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.profile-create-input:focus {
+    border-color: #65759F;
+}
+
+.profile-create-input::placeholder {
+    color: #A4A4A4;
+}
+
+.profile-create-buttons {
+    display: flex;
+    gap: 8px;
+    background: none;
+}
+
+.btn {
+    flex: 1;
+    padding: 7px 18px;
+    border: 1px solid #65759F;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #4C60C3;
+    background: #E9F3FA;
+    cursor: pointer;
+}
+
+.profile-create-error {
+    font-size: 12px;
+    color: #EF4444;
+    margin-bottom: 8px;
+    text-align: center;
+}
