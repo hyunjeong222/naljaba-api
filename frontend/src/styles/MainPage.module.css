@@ -1,0 +1,83 @@
+/* ── 메인 콘텐츠 영역 ── */
+.main-content {
+    min-height: 68vh;
+    padding: 37px 28px 74px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #F4F3F9;
+}
+
+/* ── 섹션 라벨 ── */
+.section-label {
+    font-size: 21px;
+    font-weight: 500;
+    color: #4C60C3;
+    background: none;
+    margin-bottom: 27px;
+}
+
+/* ── 프로필 그리드 ── */
+.profile-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 37px;
+    justify-content: center;
+    width: 100%;
+    background: none;
+}
+
+.profile-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    background: none;
+}
+
+/* ── 정사각형 프로필 ── */
+.profile-square {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #65759F;
+}
+
+.profile-name {
+    font-size: 13px;
+    color: #4C60C3;
+    background: none;
+}
+
+/* ── 프로필 추가 버튼 ── */
+.profile-add-btn {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #65759F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #65759F;
+    cursor: pointer;
+    background-color: #E9F3FA;
+}
+
+.profile-add-label {
+    font-size: 13px;
+    color: #4C60C3;
+    background: none;
+}
+
+/* ── 날짜 후보 보기 버튼 ── */
+.date-btn {
+    padding: 0px 62px;
+    height: 41px;
+    border-radius: 8px;
+    border: 1px solid #65759F;
+    background-color: #E9F3FA;
+    color: #4C60C3;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 31px;
+}
