@@ -26,6 +26,20 @@ public class AvailableDateController {
 
     private final AvailableDateService availableDateService;
 
+    @Operation(summary = "확정 날짜 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "204", description = "아직 확정 안 됨 / 호스트 없음")
+    })
+    @GetMapping("/confirmed")
+    public ResponseEntity<ConfirmDateResponse> getConfirmedDate() {
+        ConfirmDateResponse response = availableDateService.getConfirmedDate();
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "날짜 선택 및 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "저장 성공"),
@@ -40,8 +54,8 @@ public class AvailableDateController {
 
     @Operation(summary = "선택 날짜 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "404", description = "멤버 없음 / 선택한 날짜 없음")
+            @ApiResponse(responseCode = "200", description = "조회 성공 (날짜 없으면 빈 배열)"),
+            @ApiResponse(responseCode = "404", description = "멤버 없음")
     })
     @GetMapping("/{memberId}")
     public ResponseEntity<List<AvailableDateResponse>> getDates(
@@ -59,10 +73,9 @@ public class AvailableDateController {
         return ResponseEntity.ok(availableDateService.getDateResults());
     }
 
-    @Operation(summary = "날짜 확정 / 변경", description = "방장만 가능. 확정 전이면 확정, 확정 후면 변경으로 동작")
+    @Operation(summary = "날짜 확정 / 변경", description = "누구나 가능. 확정 전이면 확정, 확정 후면 변경으로 동작")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "확정 / 변경 성공"),
-            @ApiResponse(responseCode = "403", description = "방장 아님"),
             @ApiResponse(responseCode = "400", description = "전원 미선택 / 같은 날짜 / 선택되지 않은 날짜")
     })
     @PostMapping("/confirm/{memberId}")
@@ -70,15 +83,5 @@ public class AvailableDateController {
             @PathVariable UUID memberId,
             @Valid @RequestBody ConfirmDateRequest request) {
         return ResponseEntity.ok(availableDateService.confirmOrUpdateDate(memberId, request));
-    }
-
-    @Operation(summary = "확정 날짜 조회")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "아직 확정 안 됨")
-    })
-    @GetMapping("/confirmed")
-    public ResponseEntity<ConfirmDateResponse> getConfirmedDate() {
-        return ResponseEntity.ok(availableDateService.getConfirmedDate());
     }
 }

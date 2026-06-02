@@ -32,11 +32,17 @@ public class AvailableDateService {
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 날짜 유효성 검사
-        validateDates(request.dates());
+        if (request.dates() != null && !request.dates().isEmpty()) {
+            validateDates(request.dates());
+        }
 
         // 삭제 후 flush로 즉시 DB 반영
         availableDateRepository.deleteByMemberId(member.getId());
         availableDateRepository.flush();
+
+        if (request.dates() == null || request.dates().isEmpty()) {
+            return List.of();
+        }
 
         // 새 날짜 저장
         List<AvailableDate> dates = request.dates().stream()
@@ -55,13 +61,6 @@ public class AvailableDateService {
     public List<AvailableDateResponse> getDates(UUID memberId) {
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        List<AvailableDate> availableDates =
-                availableDateRepository.findByMemberId(memberId);
-
-        if (availableDates.isEmpty()) {
-            throw new CustomException(ErrorCode.AVAILABLE_DATE_NOT_FOUND);
-        }
 
         return availableDateRepository.findByMemberId(memberId)
                 .stream()
@@ -120,11 +119,6 @@ public class AvailableDateService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // 방장 확인
-        if (!member.isHost()) {
-            throw new CustomException(ErrorCode.NOT_HOST);
-        }
-
         // 전원 날짜 선택 확인
         long totalMemberCount = memberRepository.count();
         long selectedMemberCount = availableDateRepository.countDistinctMember();
@@ -143,16 +137,21 @@ public class AvailableDateService {
             throw new CustomException(ErrorCode.DATE_NOT_AVAILABLE);
         }
 
+        Member host = memberRepository.findByIsHostTrue()
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        boolean wasConfirmed = host.isConfirmed();
+
         // 이미 확정된 날짜와 같은 날짜인지 확인
-        if (member.isConfirmed() && member.getConfirmedDate().equals(request.date())) {
+        if (wasConfirmed && host.getConfirmedDate().equals(request.date())) {
             throw new CustomException(ErrorCode.SAME_DATE_CONFIRMED);
         }
 
-        member.confirmDate(request.date());
-        memberRepository.save(member);
+        host.confirmDate(request.date());
+        memberRepository.save(host);
 
         // 확정 전이었으면 "확정", 이미 확정됐었으면 "변경"
-        String message = member.isConfirmed() ? "날짜가 변경되었습니다" : "날짜가 확정되었습니다";
+        String message = wasConfirmed ? "날짜가 변경되었습니다" : "날짜가 확정되었습니다";
         return new ConfirmDateResponse(request.date(), message);
     }
 
@@ -175,16 +174,10 @@ public class AvailableDateService {
     // 확정된 날짜 조회
     @Transactional(readOnly = true)
     public ConfirmDateResponse getConfirmedDate() {
-
-        Member host = memberRepository.findByIsHostTrue()
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        // 아직 확정 안 된 경우
-        if (!host.isConfirmed()) {
-            throw new CustomException(ErrorCode.NOT_CONFIRMED_YET);
-        }
-
-        return new ConfirmDateResponse(host.getConfirmedDate(), "확정된 날짜입니다");
+        return memberRepository.findByIsHostTrue()
+                .filter(Member::isConfirmed)
+                .map(host -> new ConfirmDateResponse(host.getConfirmedDate(), "확정된 날짜입니다"))
+                .orElse(null);
     }
 
     // 날짜 유효성 검사
