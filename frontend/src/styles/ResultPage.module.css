@@ -1,0 +1,78 @@
+.receipt-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #F4F3F9;
+}
+
+/* ── 영수증 테이블 ── */
+.receipt-table {
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* ── 행 ── */
+.receipt-row {
+    min-height: 36px;
+    border-bottom: 1px solid #65759F;
+    display: grid;
+    grid-template-columns: 40px 1fr 40px 50px;
+}
+
+.receipt-row:last-child {
+    border-bottom: none;
+}
+
+.row-index {
+    padding: 8px 4px;
+    border-right: 1px solid #65759F;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row-color {
+    width: 12px;
+    border-right: 1px solid #65759F;
+}
+
+.row-name {
+    padding: 10px;
+    border-right: 1px solid #65759F;
+    font-size: 14px;
+    color: #4C60C3;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.row-label {
+    color: #4C60C3;
+    font-weight: 700;
+}
+
+.row-empty {
+    border-right: 1px solid #65759F;
+}
+
+.row-empty:last-child {
+    border-right: none;
+}
+
+/* ── 이미지 영역 ── */
+.overlay-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-36%, -33%) rotate(-23deg);
+    z-index: 10;
+    pointer-events: none;
+    width: 82%;
+}
+
+.overlay-image img {
+    width: 100%;
+    height: auto;
+    opacity: 0.85;
+}

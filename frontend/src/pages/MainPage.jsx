@@ -1,17 +1,42 @@
 import { useState, useEffect } from 'react';
-import { getMembers } from '../api/api';
+import { getMembers, getConfirmedDate } from '../api/api';
 import '../styles/global.css';
 import styles from '../styles/MainPage.module.css';
 
 function MainPage({ navigate, tableInfo }) {
     const [members, setMembers] = useState([]);
+    const [confirmedDate, setConfirmedDate] = useState(null);
 
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
+        getConfirmedDate()
+            .then(res => setConfirmedDate(res.data.confirmedDate))
+            .catch(() => setConfirmedDate(null)); // 확정 전이면 null
     }, []);
 
     // members 배열에서 host 찾기
     const hostMember = members.find(m => m.isHost);
+
+    // 날짜 포맷 변환 (2026-05-23 → 2026. 05. 23 (토))
+    const formatDate = (dateStr, includeDay = false) => {
+        if (!dateStr) return '???';
+
+        const date = new Date(dateStr + 'T00:00:00');
+
+        if (isNaN(date.getTime())) return '???';
+
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        if (includeDay) {
+            return `${year}. ${month}. ${day} (${days[date.getDay()]})`;
+        }
+
+        return `${year}-${month}-${day}`;
+    };
 
     const handleProfileClick = (member) => {
         localStorage.setItem('memberId', member.memberId);
@@ -41,12 +66,25 @@ function MainPage({ navigate, tableInfo }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">DATE</span>
-                        <span className="info-value">???</span>
+                        <span className="info-value">
+                            {confirmedDate ? formatDate(confirmedDate) : '???'}
+                        </span>
                     </div>
                 </div>
 
                 {/* 메인 콘텐츠 */}
                 <div className={styles['main-content']}>
+                    {/* 확정 날짜 배너 */}
+                    {confirmedDate && (
+                        <div className={styles['confirmed-banner']}
+                        onClick={() => navigate('result')}
+                        style={{ cursor: 'pointer' }}
+                        >
+                            <span className={styles['confirmed-label']}>확정 날짜</span>
+                            <span className={styles['confirmed-date']}>{formatDate(confirmedDate, true)}</span>
+                        </div>
+                    )}
+
                     <p className={styles['section-label']}>프로필 선택</p>
 
                     <div className={styles['profile-list']}>
@@ -73,7 +111,7 @@ function MainPage({ navigate, tableInfo }) {
                         </div>
                     </div>
 
-                    <button className={styles['date-btn']} onClick={() => navigate('calendar')}>
+                    <button className={styles['date-btn']} onClick={() => navigate('confirm')}>
                         날짜 후보 보기 
                     </button>
                 </div>
@@ -94,7 +132,7 @@ function MainPage({ navigate, tableInfo }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>
-                        <span className="info-value">{hostMember?.name ?? '???'}</span>
+                        <span className="info-value host-name">{hostMember?.name ?? '???'}</span>
                     </div>
                 </div>
 
