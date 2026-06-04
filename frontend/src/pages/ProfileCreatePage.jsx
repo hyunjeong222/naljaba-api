@@ -1,29 +1,41 @@
 import { useState, useEffect } from 'react';
-import { createMember, getMembers } from '../api/api';
+import { createMember, getMembers, getConfirmedDate } from '../api/api';
 import '../styles/global.css';
 import styles from '../styles/ProfileCreatePage.module.css';
 
-const COLOR_PALETTE = ['#F2E5E9', '#F7E7C3', '#DCD1E0', '#DFDFE9', '#CDE2D6'];
+const COLOR_PALETTE = ['#EBC0CE', '#BFAFD1', '#B2D3D7', '#F3E19F', '#B9D067'];
 
 function ProfileCreatePage({ navigate }) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const [members, setMembers] = useState([]);
+    const [confirmedDate, setConfirmedDate] = useState(null);
     const [assignedColor] = useState(
         () => COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]
     );
 
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
+        getConfirmedDate()
+            .then(res => setConfirmedDate(res.data.confirmedDate))
+            .catch(() => setConfirmedDate(null)); // 확정 전이면 null
     }, []);
 
     const hostMember = members.find(m => m.isHost);
 
+    // 날짜 포맷 변환 (2026-05-23 → 2026. 05. 23 (토))
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '???';
+        const date = new Date(dateStr + 'T00:00:00');
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dayOfWeek = days[date.getDay()];
+        return `${year}-${month}-${day}`;
+    };
+
     const handleCreate = async () => {
-        if (!name.trim()) {
-            setError('이름을 입력해주세요');
-            return;
-        }
         try {
             const res = await createMember(name, assignedColor);
             localStorage.setItem('memberId', res.data.memberId);
@@ -56,7 +68,9 @@ function ProfileCreatePage({ navigate }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">DATE</span>
-                        <span className="info-value">???</span>
+                        <span className="info-value">
+                            {confirmedDate ? formatDate(confirmedDate) : '???'}
+                        </span>
                     </div>
                 </div>
 
@@ -86,7 +100,11 @@ function ProfileCreatePage({ navigate }) {
                     </div>
 
                     <div className={styles['profile-create-buttons']}>
-                        <button onClick={handleCreate} className={styles['btn']}>저장</button>
+                        <button 
+                        onClick={handleCreate} 
+                        className={styles['btn']}
+                        disabled={!name.trim()}
+                        >저장</button>
                         <button onClick={() => navigate('main')} className={styles['btn']}>취소</button>
                     </div>
                 </div>
@@ -107,7 +125,7 @@ function ProfileCreatePage({ navigate }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>
-                        <span className="info-value">{hostMember?.name ?? '???'}</span>
+                        <span className="info-value host-name">{hostMember?.name ?? '???'}</span>
                     </div>
                 </div>
 

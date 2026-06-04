@@ -1,0 +1,226 @@
+.main-content {
+    min-height: 68vh;
+    padding: 27px 24px 74px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #F4F3F9;
+}
+
+/* ── 타이틀 ── */
+.title-section {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 13px;
+}
+
+.title {
+    font-size: 21px;
+    margin-bottom: 3px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #65759F;
+}
+
+/* ── 캘린더 래퍼 ── */
+.calendar-wrapper {
+    padding: 16px;
+    background-color: #FFFFFF;
+}
+
+/* ── react-calendar 직접 스타일링 ── */
+.calendar-wrapper :global(.react-calendar) {
+    width: 100%;
+    border: none;
+    background: transparent;
+}
+
+.calendar-wrapper :global(.react-calendar__navigation) {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    margin-bottom: 12px;
+}
+
+.calendar-wrapper :global(.react-calendar__navigation button) {
+    min-width: unset;
+    padding: 4px 12px;
+    border: none;
+    font-size: 14px;
+    color: #4C60C3;
+    cursor: pointer;
+    background: none;
+}
+
+.calendar-wrapper :global(.react-calendar__navigation__label) {
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.calendar-wrapper :global(.react-calendar__navigation__prev2-button),
+.calendar-wrapper :global(.react-calendar__navigation__next2-button) {
+    display: none;
+}
+
+.calendar-wrapper :global(.react-calendar__navigation__prev-button),
+.calendar-wrapper :global(.react-calendar__navigation__next-button) {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 24px !important;
+    margin-top: -5px !important;
+}
+
+.calendar-wrapper :global(.react-calendar__month-view__weekdays) {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.calendar-wrapper :global(.react-calendar__month-view__weekdays__weekday) {
+    padding: 4px 0;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.calendar-wrapper :global(.react-calendar__month-view__weekdays__weekday abbr) {
+    color: #4C60C3;
+    text-decoration: none;
+}
+
+.calendar-wrapper :global(.react-calendar__month-view__days__day) {
+    position: relative;
+    padding: 6px 0;
+    border-top: 1px solid #F4F3F9;
+    font-size: 13px;
+    color: #4C60C3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    aspect-ratio: 1;
+    justify-content: center;
+    cursor: default;
+    background: none;
+    pointer-events: none; /* 클릭 불가 */
+}
+
+.calendar-wrapper :global(.react-calendar__month-view__days__day--neighboringMonth) {
+    color: #D0D4E8;
+}
+
+
+/* ── 오늘 날짜 ── */
+.calendar-wrapper :global(.react-calendar__tile--now) {
+}
+
+/* ── 모두 가능한 날짜 하이라이트 ── */
+.common-date {
+}
+
+/* ── 점 ── */
+.dot-container {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* ── 범례 ── */
+.legend-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 18px 0 4px;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-name {
+    font-size: 12px;
+    color: #4C60C3;
+}
+
+/* 선택된 날짜 */
+.selected-date {
+    color: #222 !important;
+    background-color: #E9F3FA !important;
+}
+
+/* border + background 둘 다 적용 */
+.selected-existing-date {
+    border: 2px solid #4C60C3 !important;
+    color: #222 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    background-color: #E9F3FA !important;
+}
+
+/* 가능한 날짜 (선택 전) */
+.common-date {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* 비활성화된 날짜 */
+.calendar-wrapper :global(.react-calendar__tile:disabled) {
+    cursor: default;
+    pointer-events: none;
+    background: none;
+}
+
+/* ── 버튼 라벨 ── */
+.button-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 23px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    padding: 7px 18px;
+    border: 1px solid #65759F;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #4C60C3;
+    background: #E9F3FA;
+    flex: 1;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* 기존 확정 날짜 border 표시 */
+.existing-confirmed-date {
+    border: 2px solid #4C60C3 !important;
+    color: #4C60C3 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
