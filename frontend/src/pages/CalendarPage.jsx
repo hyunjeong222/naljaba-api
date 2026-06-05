@@ -55,6 +55,27 @@ function CalendarPage({ navigate }) {
             .then(res => {
                 const dates = res.data.map(d => new Date(d.date + 'T00:00:00'));
                 setSelectedDates(dates);
+
+                // 달별 모두 선택 여부 복원
+                const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const map = {};
+                dates.forEach(date => {
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const key = `${year}-${month}`;
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                    const allDaysInMonth = [];
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const d = new Date(year, month, day);
+                        if (d >= todayStart) allDaysInMonth.push(d);
+                    }
+                    const allSelected = allDaysInMonth.every(d =>
+                        dates.some(sd => sd.toDateString() === d.toDateString())
+                    );
+                    if (allSelected) map[key] = true;
+                });
+                setSelectAllMap(map);
             })
             .catch(() => setSelectedDates([]));
     }, [memberId]);
