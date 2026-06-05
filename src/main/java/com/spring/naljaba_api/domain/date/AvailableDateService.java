@@ -31,15 +31,16 @@ public class AvailableDateService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // 날짜 유효성 검사
+        // 빈 배열이 아닐 때만 유효성 검사
         if (request.dates() != null && !request.dates().isEmpty()) {
             validateDates(request.dates());
         }
 
-        // 삭제 후 flush로 즉시 DB 반영
+        // 기존 날짜 삭제 후 flush로 즉시 DB 반영
         availableDateRepository.deleteByMemberId(member.getId());
         availableDateRepository.flush();
 
+        // 빈 배열이면 삭제만 하고 반환
         if (request.dates() == null || request.dates().isEmpty()) {
             return List.of();
         }
@@ -137,20 +138,22 @@ public class AvailableDateService {
             throw new CustomException(ErrorCode.DATE_NOT_AVAILABLE);
         }
 
+        // 방장을 찾아서 confirmedDate 저장 (확정 날짜는 방장에게 저장)
         Member host = memberRepository.findByIsHostTrue()
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        boolean wasConfirmed = host.isConfirmed();
-
         // 이미 확정된 날짜와 같은 날짜인지 확인
-        if (wasConfirmed && host.getConfirmedDate().equals(request.date())) {
+        if (member.isConfirmed() && member.getConfirmedDate().equals(request.date())) {
             throw new CustomException(ErrorCode.SAME_DATE_CONFIRMED);
         }
+
+        // 확정 전 여부를 미리 저장
+        boolean wasConfirmed = host.isConfirmed();
 
         host.confirmDate(request.date());
         memberRepository.save(host);
 
-        // 확정 전이었으면 "확정", 이미 확정됐었으면 "변경"
+        // wasConfirmed로 판단
         String message = wasConfirmed ? "날짜가 변경되었습니다" : "날짜가 확정되었습니다";
         return new ConfirmDateResponse(request.date(), message);
     }
@@ -174,6 +177,7 @@ public class AvailableDateService {
     // 확정된 날짜 조회
     @Transactional(readOnly = true)
     public ConfirmDateResponse getConfirmedDate() {
+        // host가 없거나 확정 안 됐으면 null 반환
         return memberRepository.findByIsHostTrue()
                 .filter(Member::isConfirmed)
                 .map(host -> new ConfirmDateResponse(host.getConfirmedDate(), "확정된 날짜입니다"))

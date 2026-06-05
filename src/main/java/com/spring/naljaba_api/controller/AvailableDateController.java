@@ -35,7 +35,7 @@ public class AvailableDateController {
     public ResponseEntity<ConfirmDateResponse> getConfirmedDate() {
         ConfirmDateResponse response = availableDateService.getConfirmedDate();
         if (response == null) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // ← 204 반환
         }
         return ResponseEntity.ok(response);
     }
@@ -54,7 +54,7 @@ public class AvailableDateController {
 
     @Operation(summary = "선택 날짜 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공 (날짜 없으면 빈 배열)"),
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "멤버 없음")
     })
     @GetMapping("/{memberId}")
