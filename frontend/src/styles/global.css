@@ -1,29 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nanum+Pen+Script&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat+Brush&family=Nanum+Brush+Script&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* ── 외부 배경 ── */
 .page-wrapper {
     min-height: 68vh;
+    padding: 4px 19px 28px;
     background-color: #E9F3FA;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 19px 28px;
     box-sizing: border-box;
 }
 
 /* ── 타이틀 ── */
 .main-title {
-    font-family: 'Lora', serif;
+    font-family: "Abril Fatface", serif;
     font-size: 67px;
-    font-weight: 800;
+    font-weight: 600;
     color: #4654A2;
-    margin: 0;
-    letter-spacing: -1.2px;
+    letter-spacing: 1.2px;
     text-align: center;
     margin-bottom: 4px;
 }
 
-/* ── 흰 카드 ── */
+/* ── 틀 ── */
 .card-container {
     width: 100%;
     max-width: 420px;
@@ -35,19 +34,18 @@
 /* ── 상단/하단 정보 바 ── */
 .info-bar {
     display: grid;
-    grid-template-columns: 0.5fr 0.5fr 0.5fr 1.5fr;
+    grid-template-columns: 60px 60px 60px 1fr;
     border-top: 2px solid #65759F;
     border-bottom: 2px solid #65759F;
 }
 
 .info-cell {
+    padding: 4px 0px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1px;
     border-right: 2px solid #65759F;
-    padding: 4px 0px;
-    letter-spacing: -0.3px;
 }
 
 .info-cell:last-child {
@@ -56,14 +54,20 @@
 
 .info-label {
     font-size: 10px;
+    letter-spacing: -0.3px;
     color: #65759F;
-    font-weight: 500;
     text-transform: uppercase;
 }
 
 .info-value {
-    font-family: "Nanum Pen Script";
-    font-size: 26px;
+    font-family: "Caveat Brush", cursive;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.host-name {
+    font-family: "Nanum Brush Script", cursive;
+    font-size: 30px;
     font-weight: 600;
-    line-height: 28px;
+    line-height: 1;
 }

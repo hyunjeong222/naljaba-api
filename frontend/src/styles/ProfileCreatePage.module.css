@@ -1,7 +1,7 @@
 /* ── 메인 콘텐츠 영역 ── */
 .main-content {
     min-height: 68vh;
-    padding: 37px 28px 74px;
+    padding: 36px 24px 74px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,11 +10,10 @@
 
 /* ── 섹션 라벨 ── */
 .section-label {
+    margin: 19px 0px 27px;
     font-size: 21px;
-    font-weight: 500;
     color: #4C60C3;
     background: none;
-    margin-bottom: 27px;
 }
 
 .profile-color-preview {
@@ -24,21 +23,21 @@
 }
 
 .profile-input-container {
+    margin: 16px 0px 24px;
     background: none;
-    margin: 17px 0px 28px;
 }
 
 .profile-create-input {
     width: 100%;
     height: 42px;
+    padding: 0px 21px;
     border: 1px solid #A4A4A4;
-    border-radius: 8px;
-    padding: 0px 22px;
-    font-size: 13px;
-    outline: none;
+    border-radius: 10px;
+    font-size: 14px;
     text-align: center;
+    outline: none;
     box-sizing: border-box;
-    background-color: #fff;
+    background-color: #FFFFFF;
 }
 
 .profile-create-input:focus {
@@ -49,6 +48,7 @@
     color: #A4A4A4;
 }
 
+/* ── 버튼 라벨 ── */
 .profile-create-buttons {
     display: flex;
     gap: 8px;
@@ -56,19 +56,17 @@
 }
 
 .btn {
-    flex: 1;
     padding: 7px 18px;
     border: 1px solid #65759F;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 15px;
     color: #4C60C3;
     background: #E9F3FA;
+    flex: 1;
     cursor: pointer;
 }
 
-.profile-create-error {
-    font-size: 12px;
-    color: #EF4444;
-    margin-bottom: 8px;
-    text-align: center;
+.btn:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
