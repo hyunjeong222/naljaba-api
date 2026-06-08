@@ -42,6 +42,8 @@ dependencies {
 	// PostgreSQL 드라이버
 	runtimeOnly 'org.postgresql:postgresql'
 
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
 	// 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
