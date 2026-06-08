@@ -40,3 +40,6 @@ frontend/node_modules/
 
 .vite/
 frontend/.vite/
+
+.env
+src/main/resources/.env
