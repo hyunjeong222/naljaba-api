@@ -17,6 +17,12 @@ function DateConfirmPage({ navigate }) {
     const memberId = localStorage.getItem('memberId');
     const today = new Date();
 
+    const oneYearLater = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+
+    const isLastMonth =
+    activeStartDate.getFullYear() === oneYearLater.getFullYear() &&
+    activeStartDate.getMonth() === oneYearLater.getMonth();
+
     const isCurrentMonth =
         activeStartDate.getFullYear() === today.getFullYear() &&
         activeStartDate.getMonth() === today.getMonth();
@@ -225,6 +231,8 @@ function DateConfirmPage({ navigate }) {
                             onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)}
                             showNeighboringMonth={false}
                             formatDay={(locale, date) => date.getDate()}
+                            minDate={today}
+                            maxDate={oneYearLater}
                             prevLabel={
                                 <span style={{
                                     color: isCurrentMonth ? '#d0d4e8' : '#4C60C3',
@@ -233,6 +241,15 @@ function DateConfirmPage({ navigate }) {
                                     fontSize: 24,
                                     marginTop: -5
                                 }}>‹</span>
+                            }
+                            nextLabel={
+                                <span style={{
+                                    color: isLastMonth ? '#d0d4e8' : '#4C60C3',
+                                    pointerEvents: isLastMonth ? 'none' : 'auto',
+                                    fontFamily: "Noto Sans",
+                                    fontSize: 24,
+                                    marginTop: -5
+                                }}>›</span>
                             }
                         />
 

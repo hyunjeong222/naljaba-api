@@ -13,30 +13,34 @@ function CalendarPage({ navigate }) {
     const [selectAllMap, setSelectAllMap] = useState({});
 
     const today = new Date();
+    const oneYearLater = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const [activeStartDate, setActiveStartDate] = useState(firstDayOfMonth); // ← 위로 이동
+    const [activeStartDate, setActiveStartDate] = useState(firstDayOfMonth);
 
     const currentMonthKey = `${activeStartDate.getFullYear()}-${activeStartDate.getMonth()}`;
-    const selectAll = selectAllMap[currentMonthKey] ?? false; // ← activeStartDate 아래에 위치
+    const selectAll = selectAllMap[currentMonthKey] ?? false;
+
+    const isCurrentMonth =
+        activeStartDate.getFullYear() === today.getFullYear() &&
+        activeStartDate.getMonth() === today.getMonth();
+
+    const isLastMonth =
+        activeStartDate.getFullYear() === oneYearLater.getFullYear() &&
+        activeStartDate.getMonth() === oneYearLater.getMonth();
 
     const memberId = localStorage.getItem('memberId');
     const currentMember = members.find(m => String(m.memberId) === String(memberId));
     const hostMember = members.find(m => m.isHost);
-
-    // 현재 보이는 달이 오늘 달인지 확인
-    const isCurrentMonth =
-        activeStartDate.getFullYear() === today.getFullYear() &&
-        activeStartDate.getMonth() === today.getMonth();
 
     // 멤버 목록 + 확정 날짜 조회
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
         getConfirmedDate()
             .then(res => setConfirmedDate(res.data.confirmedDate))
-            .catch(() => setConfirmedDate(null)); // 확정 전이면 null
+            .catch(() => setConfirmedDate(null));
     }, []);
 
-     // 날짜 포맷 변환 (2026-05-23 → 2026. 05. 23 (토))
+    // 날짜 포맷 변환
     const formatDate = (dateStr) => {
         if (!dateStr) return '???';
         const date = new Date(dateStr + 'T00:00:00');
@@ -56,7 +60,6 @@ function CalendarPage({ navigate }) {
                 const dates = res.data.map(d => new Date(d.date + 'T00:00:00'));
                 setSelectedDates(dates);
 
-                // 달별 모두 선택 여부 복원
                 const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const map = {};
                 dates.forEach(date => {
@@ -118,7 +121,6 @@ function CalendarPage({ navigate }) {
         } else {
             setSelectedDates([...selectedDates, date]);
         }
-        // setSelectAll(false);
         setSelectAllMap({ ...selectAllMap, [currentMonthKey]: false });
     };
 
@@ -127,7 +129,6 @@ function CalendarPage({ navigate }) {
         const month = activeStartDate.getMonth();
 
         if (selectAll) {
-            // 현재 달 날짜만 제거
             setSelectedDates(selectedDates.filter(
                 d => !(d.getFullYear() === year && d.getMonth() === month)
             ));
@@ -139,9 +140,8 @@ function CalendarPage({ navigate }) {
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
-                if (date >= todayStart) allDates.push(date); // ← today 대신 todayStart
+                if (date >= todayStart && date <= oneYearLater) allDates.push(date); // ← oneYearLater 추가
             }
-            // 다른 달 선택 유지 + 현재 달 추가
             const otherMonthDates = selectedDates.filter(
                 d => !(d.getFullYear() === year && d.getMonth() === month)
             );
@@ -151,12 +151,6 @@ function CalendarPage({ navigate }) {
     };
 
     const handleSave = async () => {
-        /*
-        if (selectedDates.length === 0) {
-            setError('날짜를 하나 이상 선택해주세요');
-            return;
-        }
-        */
         try {
             const dates = selectedDates.map(d => {
                 const year = d.getFullYear();
@@ -256,6 +250,7 @@ function CalendarPage({ navigate }) {
                             tileClassName={tileClassName}
                             tileContent={tileContent}
                             minDate={today}
+                            maxDate={oneYearLater}
                             calendarType="gregory"
                             activeStartDate={activeStartDate}
                             onActiveStartDateChange={({ activeStartDate }) => {
@@ -271,6 +266,15 @@ function CalendarPage({ navigate }) {
                                     fontSize: 24,
                                     marginTop: -5
                                 }}>‹</span>
+                            }
+                            nextLabel={
+                                <span style={{
+                                    color: isLastMonth ? '#d0d4e8' : '#4C60C3',
+                                    pointerEvents: isLastMonth ? 'none' : 'auto',
+                                    fontFamily: "Noto Sans",
+                                    fontSize: 24,            
+                                    marginTop: -5            
+                                }}>›</span>
                             }
                         />
 
