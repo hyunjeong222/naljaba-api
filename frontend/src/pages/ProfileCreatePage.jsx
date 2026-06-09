@@ -96,7 +96,7 @@ function ProfileCreatePage({ navigate }) {
                             className={styles['profile-create-input']}
                             autoFocus
                         />
-                        {error && <p className={styles['profile-create-error']}>{error}</p>}
+                        {error && <p className={styles['error-text']}>{error}</p>}
                     </div>
 
                     <div className={styles['profile-create-buttons']}>

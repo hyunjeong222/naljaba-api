@@ -100,6 +100,7 @@ function DateConfirmPage({ navigate }) {
     // 날짜 타일 콘텐츠 (멤버별 점 표시)
     const tileContent = ({ date, view }) => {
         if (view !== 'month') return null;
+
         const dots = Object.values(memberDates).filter(m =>
             m.dates.some(d => d.toDateString() === date.toDateString())
         );
@@ -120,16 +121,43 @@ function DateConfirmPage({ navigate }) {
     // 날짜 타일 클래스
     const tileClassName = ({ date, view }) => {
         if (view !== 'month') return '';
+
         const isSelected = confirmedDate?.toDateString() === date.toDateString();
         const isExisting = existingConfirmedDate?.toDateString() === date.toDateString();
         const isCommon = commonDates.some(
             d => d.toDateString() === date.toDateString()
         );
-        if (isSelected && isExisting) return styles['selected-existing-date'];
-        if (isSelected) return styles['selected-date'];
-        if (isExisting) return styles['existing-confirmed-date'];
-        if (isCommon) return styles['common-date'];
-        return '';
+
+        // 첫 번째 행 계산
+        const year = activeStartDate.getFullYear();
+        const month = activeStartDate.getMonth();
+        const firstDayOfWeek = new Date(year, month, 1).getDay();
+        const firstRowEnd = 7 - firstDayOfWeek;
+
+        // 마지막 행 계산
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const lastDayOfWeek = new Date(year, month + 1, 0).getDay();
+        const lastRowStart = lastDay - lastDayOfWeek;
+
+        const isFirstRow =
+            date.getFullYear() === year &&
+            date.getMonth() === month &&
+            date.getDate() <= firstRowEnd;
+
+        const isLastRow =
+            date.getFullYear() === year &&
+            date.getMonth() === month &&
+            date.getDate() >= lastRowStart;
+
+        const classes = [];
+        if (isSelected && isExisting) classes.push(styles['selected-existing-date']);
+        else if (isSelected) classes.push(styles['selected-date']);
+        else if (isExisting) classes.push(styles['existing-confirmed-date']);
+        else if (isCommon) classes.push(styles['common-date']);
+        if (isFirstRow) classes.push(styles['first-row']);
+        if (isLastRow) classes.push(styles['no-border']);
+
+        return classes.join(' ');
     };
 
     // 가능한 날짜 외 비활성화

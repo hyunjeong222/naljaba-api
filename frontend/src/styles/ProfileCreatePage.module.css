@@ -48,6 +48,14 @@
     color: #A4A4A4;
 }
 
+/* ── 오류 텍스트 ── */
+.error-text {
+    font-size: 13px;
+    color: #F04F40;
+    margin-top: 6px;
+    font-weight: 400;
+}
+
 /* ── 버튼 라벨 ── */
 .profile-create-buttons {
     display: flex;
