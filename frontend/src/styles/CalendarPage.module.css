@@ -86,7 +86,7 @@
 
 .calendar-wrapper :global(.react-calendar__month-view__weekdays__weekday) {
     padding: 4px 0;
-    font-size: 13px;
+    font-size: 13x;
     text-decoration: none;
 }
 
@@ -98,7 +98,7 @@
 .calendar-wrapper :global(.react-calendar__month-view__days__day) {
     position: relative;
     padding: 6px 0;
-    border-top: 1px solid #F4F3F9;
+    border-bottom: 1px solid #D9D9D9;
     font-size: 13px;
     color: #4C60C3;
     display: flex;
@@ -110,24 +110,22 @@
     background: none;
 }
 
-.calendar-wrapper :global(.react-calendar__month-view__days__day--neighboringMonth) {
-    color: #D0D4E8;
+/* 첫 번째 행 border-top */
+.first-row {
+    border-top: 1px solid #D9D9D9 !important;
 }
 
-.calendar-wrapper :global(.react-calendar__tile--now) {
+/* 마지막 행 border-bottom 제거 */
+.no-border {
+    border-bottom: none !important;
 }
 
 .calendar-wrapper :global(.react-calendar__tile:disabled) {
-    color: #222;
-    opacity: 0.3;
+    color: #D9D9D9;
     cursor: default;
-    background: #D9D9D9;
 }
 
 /* ── 선택된 날짜 ── */
-.selected-date {
-}
-
 .selected-date {
     color: #222222 !important;
     border: 1px solid var(--profile-color) !important;
@@ -205,9 +203,10 @@
 
 /* ── 오류 텍스트 ── */
 .error-text {
-    font-size: 12px;
-    color: #EF4444;
-    margin: 0;
+    font-size: 13px;
+    color: #F04F40;
+    margin-top: 6px;
+    font-weight: 400;
 }
 
 /* ── 버튼 행 ── */

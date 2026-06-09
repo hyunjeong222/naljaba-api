@@ -168,10 +168,38 @@ function CalendarPage({ navigate }) {
     // 날짜 타일 클래스
     const tileClassName = ({ date, view }) => {
         if (view !== 'month') return '';
+
         const isSelected = selectedDates.some(
             d => d.toDateString() === date.toDateString()
         );
-        return isSelected ? styles['selected-date'] : '';
+
+        // 첫 번째 행 계산
+        const year = activeStartDate.getFullYear();
+        const month = activeStartDate.getMonth();
+        const firstDayOfWeek = new Date(year, month, 1).getDay();
+        const firstRowEnd = 7 - firstDayOfWeek;
+
+        // 마지막 행 계산
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const lastDayOfWeek = new Date(year, month + 1, 0).getDay();
+        const lastRowStart = lastDay - lastDayOfWeek;
+
+        const isFirstRow =
+            date.getFullYear() === year &&
+            date.getMonth() === month &&
+            date.getDate() <= firstRowEnd;
+
+        const isLastRow =
+            date.getFullYear() === year &&
+            date.getMonth() === month &&
+            date.getDate() >= lastRowStart;
+
+        const classes = [];
+        if (isSelected) classes.push(styles['selected-date']);
+        if (isFirstRow) classes.push(styles['first-row']);
+        if (isLastRow) classes.push(styles['no-border']);
+
+        return classes.join(' ');
     };
 
     // 날짜 타일 콘텐츠 (다른 멤버 점 표시)
