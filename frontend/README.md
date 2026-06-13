@@ -1,16 +1,41 @@
-# React + Vite
+# 약속 조율 서비스 '자바보자'
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+### 📅 프로젝트 진행 기간
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+2026.05.11(일) ~
+<br>
+<br>
 
-## React Compiler
+### 🚩 자바보자 소개
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+별도의 로그인 없이 이름만 입력하면 바로 사용할 수 있는 약속 날짜 조율 서비스입니다.
 
-## Expanding the ESLint configuration
+채팅방에 URL을 공유하면 친구들이 각자 가능한 날짜를 선택하고, 전원이 가능한 날짜를 자동으로 찾아줍니다.
+<br>
+<br>
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 👾 개발 환경 & 주요 기술
+
+#### Backend
+
+- Java 17
+- SpringBoot 3.2.5
+- Gradle
+- Spring Data JPA (Hibernate)
+
+#### DataBase
+
+- PostgreSQL (Supabase)
+
+#### Frontend
+
+- React + Vite 
+- CSS3
+
+#### IDE & Tools
+
+- IntelliJ Community
+- VS Code
+- Git / GitHub
+<br>
