@@ -1,0 +1,4 @@
+[
+phases.setup]
+
+nixPkgs = ["jdk17_headless"]
