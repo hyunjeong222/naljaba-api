@@ -3,7 +3,7 @@
 /* ── 외부 배경 ── */
 .page-wrapper {
     min-height: 68vh;
-    padding: 4px 19px 28px;
+    padding: 8px 21px 52px;
     background-color: #E9F3FA;
     display: flex;
     align-items: center;
@@ -70,4 +70,9 @@
     font-size: 30px;
     font-weight: 600;
     line-height: 1;
+}
+
+.host-empty {
+    font-family: "Caveat Brush", cursive;
+    color: #4C60C3;
 }

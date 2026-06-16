@@ -10,7 +10,7 @@
 
 /* ── 섹션 라벨 ── */
 .section-label {
-    margin: 19px 0px 27px;
+    margin: 23px 0px 27px;
     font-size: 21px;
     color: #4C60C3;
     background: none;
@@ -80,6 +80,13 @@
     color: #4C60C3;
     cursor: pointer;
     background-color: #E9F3FA;
+}
+
+.date-btn:disabled {
+    border: 1px solid #65759F;
+    border-radius: 10px;
+    color: #4C60C3;
+    background: #E9F3FA;
 }
 
 /* 배너 스타일 추가 */

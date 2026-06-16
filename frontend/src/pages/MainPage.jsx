@@ -7,6 +7,9 @@ function MainPage({ navigate, tableInfo }) {
     const [members, setMembers] = useState([]);
     const [confirmedDate, setConfirmedDate] = useState(null);
 
+    // 멤버가 없거나 날짜를 선택하지 않은 멤버가 있으면 비활성화
+    const isButtonDisabled = members.length === 0;
+
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
         getConfirmedDate()
@@ -111,8 +114,16 @@ function MainPage({ navigate, tableInfo }) {
                         </div>
                     </div>
 
-                    <button className={styles['date-btn']} onClick={() => navigate('confirm')}>
-                        날짜 후보 보기 
+                    <button
+                        className={styles['date-btn']}
+                        onClick={() => navigate('confirm')}
+                        disabled={isButtonDisabled}
+                        style={{ 
+                            cursor: isButtonDisabled ? 'default' : 'pointer',
+                            opacity: isButtonDisabled ? 0.5 : 1
+                        }}
+                    >
+                        날짜 후보 보기
                     </button>
                 </div>
 
@@ -132,7 +143,9 @@ function MainPage({ navigate, tableInfo }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>
-                        <span className="info-value host-name">{hostMember?.name ?? '???'}</span>
+                        <span className={`info-value ${hostMember?.name ? 'host-name' : 'host-empty'}`}>
+                            {hostMember?.name ?? '???'}
+                        </span>
                     </div>
                 </div>
 

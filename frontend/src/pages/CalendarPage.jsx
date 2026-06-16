@@ -361,7 +361,9 @@ function CalendarPage({ navigate }) {
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>
-                        <span className="info-value host-name">{hostMember?.name ?? '???'}</span>
+                        <span className={`info-value ${hostMember?.name ? 'host-name' : 'host-empty'}`}>
+                            {hostMember?.name ?? '???'}
+                        </span>
                     </div>
                 </div>
 
