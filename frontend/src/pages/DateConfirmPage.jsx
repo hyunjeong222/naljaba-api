@@ -205,6 +205,8 @@ function DateConfirmPage({ navigate }) {
         .catch(() => setExistingConfirmedDate(null));
     }, []);
 
+    const savedCount = members.filter(m => m.hasSaved).length;
+
     return (
         <div className="page-wrapper">
             
@@ -222,8 +224,8 @@ function DateConfirmPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">DATE</span>
@@ -325,8 +327,8 @@ function DateConfirmPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>

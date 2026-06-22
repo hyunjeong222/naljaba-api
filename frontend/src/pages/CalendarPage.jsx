@@ -32,6 +32,8 @@ function CalendarPage({ navigate }) {
     const currentMember = members.find(m => String(m.memberId) === String(memberId));
     const hostMember = members.find(m => m.isHost);
 
+    const savedCount = members.filter(m => m.hasSaved).length;
+
     // 멤버 목록 + 확정 날짜 조회
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
@@ -242,8 +244,8 @@ function CalendarPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">DATE</span>
@@ -356,8 +358,8 @@ function CalendarPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>

@@ -31,7 +31,7 @@ public class MemberService {
     // 전체 회원 조회
     @Transactional(readOnly = true)
     public List<MemberResponse> getAllMembers() {
-        return memberRepository.findAll()
+        return memberRepository.findAllWithDates()
                 .stream()
                 .map(MemberResponse::from)
                 .toList();
