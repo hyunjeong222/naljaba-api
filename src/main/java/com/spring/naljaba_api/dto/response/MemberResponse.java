@@ -10,7 +10,8 @@ public record MemberResponse (
     String name,
     String profileColor,
     boolean isHost,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    boolean hasSaved
 ) {
     public static MemberResponse from(Member member) {
         return new MemberResponse(
@@ -18,7 +19,8 @@ public record MemberResponse (
                 member.getName(),
                 member.getProfileColor(),
                 member.isHost(),
-                member.getCreatedAt()
+                member.getCreatedAt(),
+                !member.getAvailableDates().isEmpty()
         );
     }
 }
