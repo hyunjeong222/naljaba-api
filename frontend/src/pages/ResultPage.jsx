@@ -29,6 +29,8 @@ function ResultPage({ navigate }) {
         return `${year}-${month}-${day}`;
     };
 
+    const savedCount = members.filter(m => m.hasSaved).length;
+
     return (
         <div className="page-wrapper">
             <div className="card-container">
@@ -45,8 +47,8 @@ function ResultPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">DATE</span>
@@ -132,8 +134,8 @@ function ResultPage({ navigate }) {
                         <span className="info-value">{members.length}</span>
                     </div>
                     <div className="info-cell">
-                        <span className="info-label">SERVER</span>
-                        <span className="info-value">7</span>
+                        <span className="info-label">SAVED</span>
+                        <span className="info-value">{savedCount}</span>
                     </div>
                     <div className="info-cell">
                         <span className="info-label">HOST</span>
