@@ -3,16 +3,14 @@ import { createMember, getMembers, getConfirmedDate } from '../api/api';
 import '../styles/global.css';
 import styles from '../styles/ProfileCreatePage.module.css';
 
-const COLOR_PALETTE = ['#EBC0CE', '#BFAFD1', '#B2D3D7', '#F3E19F', '#B9D067'];
+const COLOR_PALETTE = ['#F2E5E9', '#FFF5DF', '#C8E1E4', '#CDE2D6', '#DCD1E0'];
 
 function ProfileCreatePage({ navigate }) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const [members, setMembers] = useState([]);
     const [confirmedDate, setConfirmedDate] = useState(null);
-    const [assignedColor] = useState(
-        () => COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)]
-    );
+    const [selectedColor, setSelectedColor] = useState(COLOR_PALETTE[0]);
 
     useEffect(() => {
         getMembers().then(res => setMembers(res.data));
@@ -37,7 +35,7 @@ function ProfileCreatePage({ navigate }) {
 
     const handleCreate = async () => {
         try {
-            const res = await createMember(name, assignedColor);
+            const res = await createMember(name, selectedColor);
             localStorage.setItem('memberId', res.data.memberId);
             localStorage.setItem('isHost', String(res.data.isHost));
             navigate('main');
@@ -81,13 +79,9 @@ function ProfileCreatePage({ navigate }) {
                 <div className={styles['main-content']}>
                     <p className={styles['section-label']}>프로필 추가</p>
 
-                    {/* 색상 미리보기 */}
-                    <div
-                        className={styles['profile-color-preview']}
-                        style={{ backgroundColor: assignedColor }}
-                    />
-
+                    {/* 이름 input */}
                     <div className={styles['profile-input-container']}>
+                        <label className={styles['input-title']}>이름</label>
                         <input
                             type="text"
                             value={name}
@@ -99,6 +93,24 @@ function ProfileCreatePage({ navigate }) {
                             autoFocus
                         />
                         {error && <p className={styles['error-text']}>{error}</p>}
+                    </div>
+
+                    {/* 컬러 팔레트 */}
+                    <div className={styles['profile-input-container']}>
+                        <label className={styles['input-title']}>컬러</label>
+                        <div className={styles['color-palette']}>
+                            {COLOR_PALETTE.map(color => (
+                                <div
+                                    key={color}
+                                    className={styles['color-swatch']}
+                                    style={{
+                                        backgroundColor: color,
+                                        outline: selectedColor === color ? '1px solid #222222' : 'none'
+                                    }}
+                                    onClick={() => setSelectedColor(color)}
+                                />
+                            ))}
+                        </div>
                     </div>
 
                     <div className={styles['profile-create-buttons']}>
