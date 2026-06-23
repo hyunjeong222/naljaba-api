@@ -16,16 +16,16 @@
     background: none;
 }
 
-.profile-color-preview {
-    width: 65px;
-    height: 65px;
-    border: 1px solid #65759F;
+.profile-input-container {
+    display: inline-flex;
+    width: 260px;
+    margin-bottom: 12px;
+    background: none;
 }
 
-.profile-input-container {
-    width: 188px;
-    margin: 16px 0px 24px;
-    background: none;
+.input-title {
+    width: 60px;
+    align-content: center;
 }
 
 .profile-create-input {
@@ -49,6 +49,19 @@
     color: #A4A4A4;
 }
 
+.color-palette {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0px;
+}
+
+.color-swatch {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #65759F;
+    cursor: pointer;
+}
+
 /* ── 오류 텍스트 ── */
 .error-text {
     font-size: 13px;
@@ -62,6 +75,7 @@
     display: flex;
     gap: 8px;
     background: none;
+    margin-top: 16px;
 }
 
 .btn {
