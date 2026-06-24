@@ -207,4 +207,13 @@ public class AvailableDateService {
             }
         }
     }
+
+    // confirmedDate 리셋
+    @Transactional
+    public void resetConfirmedDate() {
+        Member host = memberRepository.findByIsHostTrue()
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        host.confirmDate(null);
+        memberRepository.save(host);
+    }
 }
