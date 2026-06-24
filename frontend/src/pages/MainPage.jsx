@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getMembers, getConfirmedDate } from '../api/api';
+import { getMembers, getConfirmedDate, resetConfirmedDate } from '../api/api';
 import '../styles/global.css';
 import styles from '../styles/MainPage.module.css';
 
@@ -47,6 +47,23 @@ function MainPage({ navigate, tableInfo }) {
         localStorage.setItem('memberId', member.memberId);
         localStorage.setItem('isHost', String(member.isHost));
         navigate('calendar');
+    };
+
+    // 프로필 추가 버튼에 모달 추가
+    const [showResetModal, setShowResetModal] = useState(false);
+
+    const handleProfileAddClick = () => {
+        if (confirmedDate) {
+            setShowResetModal(true);
+        } else {
+            navigate('profileCreate');
+        }
+    };
+
+    const handleResetConfirm = async () => {
+        await resetConfirmedDate();
+        setShowResetModal(false);
+        navigate('profileCreate');
     };
 
     return (
@@ -108,7 +125,7 @@ function MainPage({ navigate, tableInfo }) {
                         ))}
 
                         <div
-                            onClick={() => navigate('profileCreate')}
+                            onClick={handleProfileAddClick}
                             className={styles['profile-item']}
                         >
                             <div className={styles['profile-add-btn']}>+</div>
@@ -150,6 +167,19 @@ function MainPage({ navigate, tableInfo }) {
                         </span>
                     </div>
                 </div>
+
+                {/* 모달 */}
+                {showResetModal && (
+                    <div className={styles['modal-overlay']}>
+                        <div className={styles['modal']}>
+                            <p>멤버를 추가하면 확정된 날짜가 초기화됩니다. 계속하시겠어요?</p>
+                            <div className={styles['modal-buttons']}>
+                                <button onClick={() => setShowResetModal(false)} className={styles['btn']}>취소</button>
+                                <button onClick={handleResetConfirm} className={styles['btn']}>추가하기</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
             </div>
         </div>
