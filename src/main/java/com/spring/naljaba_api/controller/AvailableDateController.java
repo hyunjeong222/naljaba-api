@@ -84,4 +84,15 @@ public class AvailableDateController {
             @Valid @RequestBody ConfirmDateRequest request) {
         return ResponseEntity.ok(availableDateService.confirmOrUpdateDate(memberId, request));
     }
+
+    @Operation(summary = "확정 날짜 초기화", description = "확정된 날짜를 초기화합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "초기화 성공"),
+            @ApiResponse(responseCode = "404", description = "호스트 없음")
+    })
+    @DeleteMapping("/confirmed")
+    public ResponseEntity<Void> resetConfirmedDate() {
+        availableDateService.resetConfirmedDate();
+        return ResponseEntity.noContent().build();
+    }
 }

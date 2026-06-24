@@ -26,3 +26,6 @@ export const getDateResults = () =>
 
 export const confirmDate = (memberId, date) =>
     api.post(`/dates/confirm/${memberId}`, { date });
+
+export const resetConfirmedDate = () =>
+    api.delete('/dates/confirmed');

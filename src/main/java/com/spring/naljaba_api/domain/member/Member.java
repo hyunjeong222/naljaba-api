@@ -65,4 +65,9 @@ public class Member {
     public boolean isConfirmed() {
         return this.confirmedDate != null;
     }
+
+    // confirmedDate 리셋
+    public void resetConfirmedDate() {
+        this.confirmedDate = null;
+    }
 }

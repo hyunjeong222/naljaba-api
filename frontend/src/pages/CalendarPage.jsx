@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import { getMembers, getDates, saveDates, getConfirmedDate } from '../api/api';
+import { getMembers, getDates, saveDates, getConfirmedDate, resetConfirmedDate } from '../api/api';
 import '../styles/global.css';
 import styles from '../styles/CalendarPage.module.css';
 
@@ -227,6 +227,23 @@ function CalendarPage({ navigate }) {
     // 다른 멤버 범례 (날짜 선택한 멤버만)
     const legend = Object.values(otherMemberDates).filter(m => m.dates.length > 0);
 
+    // 저장 버튼에 모달 추가
+    const [showResetModal, setShowResetModal] = useState(false);
+
+    const handleSaveClick = () => {
+        if (confirmedDate) {
+            setShowResetModal(true);
+        } else {
+            handleSave();
+        }
+    };
+
+    const handleResetConfirm = async () => {
+        await resetConfirmedDate();
+        setShowResetModal(false);
+        handleSave();
+    };
+
     return (
          <div className="page-wrapper">
             
@@ -342,7 +359,7 @@ function CalendarPage({ navigate }) {
 
                     {/* 버튼 */}
                     <div className={styles['button-row']}>
-                        <button onClick={handleSave} className={styles['btn']}>저장</button>
+                        <button onClick={handleSaveClick} className={styles['btn']}>저장</button>
                         <button onClick={() => navigate('main')} className={styles['btn']}>뒤로</button>
                     </div>
                 </div>
@@ -368,6 +385,19 @@ function CalendarPage({ navigate }) {
                         </span>
                     </div>
                 </div>
+
+                {/* 모달 */}
+                {showResetModal && (
+                    <div className={styles['modal-overlay']}>
+                        <div className={styles['modal']}>
+                            <p>날짜를 수정하면 확정된 날짜가 초기화됩니다. 계속하시겠어요?</p>
+                            <div className={styles['modal-buttons']}>
+                                <button onClick={() => setShowResetModal(false)} className={styles['btn']}>취소</button>
+                                <button onClick={handleResetConfirm} className={styles['btn']}>수정하기</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
             </div>
         </div>
